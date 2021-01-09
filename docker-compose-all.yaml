@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  durango-event-producer-A:
+    image: durango-event-producer
+    restart: always
+    container_name: durango-event-producer-A
+    ports:
+      - 9080:9080
+
+  durango-event-producer-B:
+    image: durango-event-producer
+    restart: always
+    container_name: durango-event-producer-B
+    ports:
+      - 9081:9081
+
+  durango-event-consumer:
+    image: durango-event-consumer
+    restart: always
+    container_name: durango-event-consumer
+    ports:
+      - 9090:9090

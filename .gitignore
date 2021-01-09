@@ -1,0 +1,21 @@
+target/
+out/
+build/
+dist/
+data/
+
+.classpath
+.factorypath
+.project
+.settings
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### Web-UI ###
+portal/node_modules/
+portal/pnpmfile.js
+portal/webpack.generated.js
