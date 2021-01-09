@@ -7,6 +7,8 @@ services:
     container_name: durango-event-producer-A
     ports:
       - 9080:9080
+    environment:
+      - SERVER_PORT=9080
 
   durango-event-producer-B:
     image: durango-event-producer
@@ -14,6 +16,8 @@ services:
     container_name: durango-event-producer-B
     ports:
       - 9081:9081
+    environment:
+      - SERVER_PORT=9081
 
   durango-event-consumer:
     image: durango-event-consumer
@@ -21,3 +25,5 @@ services:
     container_name: durango-event-consumer
     ports:
       - 9090:9090
+    environment:
+      - SERVER_PORT=9090
