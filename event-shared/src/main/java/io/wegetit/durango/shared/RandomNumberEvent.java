@@ -1,4 +1,4 @@
-package io.wegetit.durango.producer.event;
+package io.wegetit.durango.shared;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class RandomNumberEvent {
+    public static final String TOPIC = "RandomNumber";
+
     private String instance;
     private Integer number;
 }

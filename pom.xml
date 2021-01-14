@@ -18,12 +18,18 @@
   </properties>
 
   <modules>
+    <module>event-shared</module>
     <module>event-consumer</module>
     <module>event-producer</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.wegetit</groupId>
+        <artifactId>durango-event-shared</artifactId>
+        <version>1.0.0</version>
+      </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
