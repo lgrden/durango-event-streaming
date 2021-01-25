@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class EventConsumerService {
 
     @KafkaListener(topics = RandomNumberEvent.TOPIC)
-    private void listener(String data) {
+    public void listener(RandomNumberEvent data) {
         log.info("Received {}", data);
     }
 }

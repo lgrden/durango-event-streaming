@@ -6,52 +6,81 @@ services:
     container_name: durango-zookeeper
     ports:
       - 2181:2181
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
 
   durango-kafka:
     image: wurstmeister/kafka
     container_name: durango-kafka
     ports:
       - 9092:9092
-      - 9093:9093
+    links:
+      - durango-zookeeper
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_LISTENERS: INTERNAL://:9093,EXTERNAL://:9092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://durango-kafka:9093,EXTERNAL://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.178.20
       KAFKA_ZOOKEEPER_CONNECT: durango-zookeeper:2181
-      KAFKA_CREATE_TOPICS: "RandomNumber:1:1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_DELETE_TOPIC_ENABLE: 'true'
     volumes:
-      - ./data/durango-kafka/data:/var/lib/kafka/data
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - durango-zookeeper
 
-#  durango-event-producer-A:
-#    image: durango-event-producer
-#    restart: always
-#    container_name: durango-event-producer-A
-#    ports:
-#      - 9080:9080
-#    environment:
-#      - SERVER_PORT=9080
-#      - PRODUCER_INSTANCE=PRODUCER_A
-#      - PRODUCER_INITIALDELAY=0
-#      - PRODUCER_FIXEDDELAY=10000
-#      - PRODUCER_BOOTSTRAP-SERVERS=localhost:9093
-#    depends_on:
-#      - durango-zookeeper
-#      - durango-kafka
-#
-#  durango-event-consumer:
-#    image: durango-event-consumer
-#    restart: always
-#    container_name: durango-event-consumer
-#    ports:
-#      - 9090:9090
-#    environment:
-#      - SERVER_PORT=9090
-#    depends_on:
-#      - durango-zookeeper
-#      - durango-kafka
+  durango-event-consumer:
+    image: durango-event-consumer
+    restart: always
+    container_name: durango-event-consumer
+    ports:
+      - 9090:9090
+    environment:
+      - SERVER_PORT=9090
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=192.168.178.20:9092
+    depends_on:
+      - durango-zookeeper
+      - durango-kafka
+
+  durango-event-producer-A:
+    image: durango-event-producer
+    restart: always
+    container_name: durango-event-producer-A
+    ports:
+      - 9080:9080
+    environment:
+      - SERVER_PORT=9080
+      - PRODUCER_INSTANCE=PRODUCER_A
+      - PRODUCER_INITIALDELAY=0
+      - PRODUCER_FIXEDDELAY=10000
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=192.168.178.20:9092
+    depends_on:
+      - durango-zookeeper
+      - durango-kafka
+
+  durango-event-producer-B:
+    image: durango-event-producer
+    restart: always
+    container_name: durango-event-producer-B
+    ports:
+      - 9081:9081
+    environment:
+      - SERVER_PORT=9081
+      - PRODUCER_INSTANCE=PRODUCER_B
+      - PRODUCER_INITIALDELAY=0
+      - PRODUCER_FIXEDDELAY=10000
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=192.168.178.20:9092
+    depends_on:
+      - durango-zookeeper
+      - durango-kafka
+
+  durango-event-producer-C:
+    image: durango-event-producer
+    restart: always
+    container_name: durango-event-producer-C
+    ports:
+      - 9082:9082
+    environment:
+      - SERVER_PORT=9082
+      - PRODUCER_INSTANCE=PRODUCER_C
+      - PRODUCER_INITIALDELAY=0
+      - PRODUCER_FIXEDDELAY=10000
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=192.168.178.20:9092
+    depends_on:
+      - durango-zookeeper
+      - durango-kafka
