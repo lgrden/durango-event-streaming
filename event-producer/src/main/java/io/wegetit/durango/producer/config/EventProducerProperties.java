@@ -19,4 +19,7 @@ public class EventProducerProperties {
     @Min(100)
     @NotNull
     private Integer fixedDelay;
+    @Min(1)
+    @NotNull
+    private Integer batchSize;
 }

@@ -26,13 +26,14 @@ public class EventProducerService {
     @Scheduled(initialDelayString = "#{@eventProducerProperties.initialDelay}",
             fixedDelayString = "#{@eventProducerProperties.fixedDelay}")
     private void process() {
-        RandomNumberEvent event = RandomNumberEvent.builder()
-                .instance(properties.getInstance())
-                .id(UUID.randomUUID().toString())
-                .number(ThreadLocalRandom.current().nextInt())
-                .build();
-
-        ListenableFuture<SendResult<String, RandomNumberEvent>> future = kafkaTemplate.send(RandomNumberEvent.TOPIC, event);
-        future.addCallback(c -> log.info("Sent message: {}", event), c -> log.error("Error sent message: {}", event, c));
+        for (int i = 0; i < properties.getBatchSize(); i++) {
+            RandomNumberEvent event = RandomNumberEvent.builder()
+                    .instance(properties.getInstance())
+                    .id(UUID.randomUUID().toString())
+                    .number(ThreadLocalRandom.current().nextInt())
+                    .build();
+            ListenableFuture<SendResult<String, RandomNumberEvent>> future = kafkaTemplate.send(RandomNumberEvent.TOPIC, event);
+            future.addCallback(c -> log.info("Sent message {}.", event), c -> log.error("Error sending message {}.", event, c));
+        }
     }
 }
